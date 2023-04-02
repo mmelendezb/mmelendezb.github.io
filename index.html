@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>Lillooet River (BC,Canada)</title>
+  <title>Oxbow Lakes - Madre de Dios River</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
      crossorigin=""/>
@@ -8,35 +8,28 @@
     integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
     crossorigin=""></script>
   <style>
-    #map{ width: 900px; height: 500px; }
+    #map{ width: 600px; height: 400px; }
   </style>
 </head>
 
 <body>
 
   <div id="map">
-	  <script src="PointsLayer-geojson.js" type="text/javascript"></script>
-	</div>
+  <script src="OxbowLakes.js" type="text/javascript"></script>
+  </div>
 
   <script>
 
   // initialize the map
-  var map = L.map('map').setView([50.45, -123], 10);
-
-var polygonPoints = [
-                [40, -89.1],
-                [40.1, -89.1],
-                [40.1, -89.15],
-                [40, -89.15]];
-
-var poly = L.polygon(polygonPoints).addTo(map);
+  var map = L.map('map').setView([-12.61,-70.11], 10);
 	  
   // load a tile layer
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
 }).addTo(map);
 
 L.geoJSON(PointsLayer).addTo(map);
+
   </script>
 </body>
 </html>
