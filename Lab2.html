@@ -1,0 +1,37 @@
+<html>
+<head>
+  <title>Oxbow Lakes - Madre de Dios River</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+     crossorigin=""/>
+   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+    crossorigin=""></script>
+  <style>
+    #map{ width: 600px; height: 400px; }
+  </style>
+</head>
+
+<body>
+
+  <div id="map">
+  <script type="text/javascript" src="Lab2.js"></script>
+  </div>
+
+  <script>
+
+  // initialize the map
+  const map = L.map('map').setView([40,-89], 6);
+	  
+  // load a tile layer
+const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+const IllinoisGeoJSON = L.geoJson(IllinoisGJSON).addTo(map);
+//Remember - IllioisGJSON is the variable name inside your Lab2.JS file;
+
+  </script>
+</body>
+</html>
