@@ -37,6 +37,7 @@
 
   <div id="map">
   <script type="text/javascript" src="Lab2.js"></script>
+  <script type="text/javascript" src="UniversitiesColleges.js"></script>
   </div>
 
   <script>
@@ -106,6 +107,8 @@
 		}).addTo(map);
 	//Remember - IllioisGJSON is the variable name inside your Lab2.JS file;
 	
+	const geojson2 = L.geoJson(Universities).addTo(map);
+	
 	//locates the legend in the bottom right of the map
 	var legend = L.control({position: 'bottomright'});
 
@@ -128,6 +131,7 @@
 
 //adds the legend to the map
 legend.addTo(map);
+
 
   </script>
 </body>
