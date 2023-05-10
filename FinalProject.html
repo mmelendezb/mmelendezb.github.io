@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+    <link
+      href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <style>
+	  #map { position:absolute; top:0; bottom:0; width:100%; height:33%;}
+	  #map2 { position:absolute; top:34%; bottom:0; width:100%; height:33%;}
+	  #map3 { position:absolute; top:68%; bottom:0; width:100%; height:32%;}
+
+      h2 {
+        font-size: 20px;
+        line-height: 20px;
+        margin-bottom: 10px;
+      }
+
+      .session {
+        margin-bottom: 50px;
+			font: 10px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+			position: absolute;
+			width: 25%;
+			top: 0;
+			padding: 5px;
+      }
+	  
+	   .session2 {
+        margin-bottom: 50px;
+			font: 10px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+			position: absolute;
+			width: 25%;
+			top: 34%;
+			padding: 5px;
+      }
+	   .session3 {
+        margin-bottom: 50px;
+			font: 10px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+			position: absolute;
+			width: 25%;
+			top: 68%;
+			padding: 5px;
+      }
+	  	.session4 {
+        margin-bottom: 1px;
+			font: 1px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+			position: absolute;
+			background:transparent;
+			width: 10%;
+			top: 45%;
+			right:0;
+			padding: 5px;
+			text-align:center;
+      }
+		.maplabel {
+			position: absolute;
+			font: 6px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+			background: transparent;
+			z-index: 1;
+			font-size: 15px;
+			padding: 5px;
+			right:0;
+			font-weight: bold;
+		}
+      .row {
+        height: 12px;
+        width: 100%;
+      }
+
+      .colors {
+        background: linear-gradient(
+          to right,
+          #2dc4b2,
+          #3bb3c3,
+          #669ec4,
+          #8b88b6,
+          #a2719b,
+          #aa5e79
+        );
+        margin-bottom: 5px;
+      }
+
+      .label {
+        width: 15%;
+        display: inline-block;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+ 	<style>
+
+	</style>
+	<div id='map'></div>
+	<!-- <div class='maplabel map'>Braiding Length (m)</div> -->
+	<div id='map2'></div>
+	<!-- <div class='maplabel map2'>Active Channel Area (m<sup>2</sup>)</div> -->
+	<div id='map3'></div>
+	<!-- <div class='maplabel map3'>Number of Bars</div> -->
+      <div class="session">
+        <h2>Braiding Length (m)</h2>
+        <div class="row colors"></div>
+        <div class="row labels">
+          <div class="label">0</div>
+          <div class="label">700</div>
+          <div class="label">1400</div>
+          <div class="label">2100</div>
+          <div class="label">2800</div>
+          <div class="label">3500</div>
+        </div>
+      </div>
+      <div class="session2">
+        <h2>Active Channel Area (m<sup>2</sup>)</h2>
+        <div class="row colors"></div>
+        <div class="row labels">
+          <div class="label">40300</div>
+          <div class="label">88820</div>
+          <div class="label">137340</div>
+          <div class="label">185860</div>
+          <div class="label">234380</div>
+          <div class="label">282900</div>
+        </div>
+      </div>
+      <div class="session3">
+        <h2>Number of Bars</h2>
+        <div class="row colors"></div>
+        <div class="row labels">
+          <div class="label">0</div>
+          <div class="label">3</div>
+          <div class="label">6</div>
+          <div class="label">9</div>
+          <div class="label">12</div>
+          <div class="label">15</div>
+        </div>
+      </div>		
+    <div class="session4">
+      <h2>Year: <label id="active-year">2009</label></h2>
+      <input id="slider" type="range" min="2009" max="2022" step="1" value="2009"/>
+      </div> 
+    <script>
+      mapboxgl.accessToken = 'pk.eyJ1IjoibWlzaGVsOTIiLCJhIjoiY2xoYXJseGNxMGs5YzNmdGRzeHNxbWM0OCJ9._vlW0uget0Cr6QigOoKUjg';
+      const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/light-v11',
+        center: [-123.17, 50.55],
+        zoom: 11
+      });
+	  map.rotateTo(20.0)
+	  map.addControl(new mapboxgl.NavigationControl());
+      map.on('load', () => {
+        let filterYear = ['==', ['number', ['get', 'Year']], 2009];
+
+        map.addLayer({
+          id: 'collisions',
+          type: 'circle',
+          source: {
+            type: 'geojson',
+            data: 'https://raw.githubusercontent.com/mmelendezb/mmelendezb.github.io/main/data/braiding_length.geojson' // replace this with the url of your own geojson
+          },
+          paint: {
+            'circle-radius': [
+              'interpolate',
+              ['linear'],
+              ['number', ['get', 'BL']],
+              0,
+              4,
+              3500,
+              24
+            ],
+            'circle-color': [
+              'interpolate',
+              ['linear'],
+              ['number', ['get', 'BL']],
+              0,
+              '#2DC4B2',
+              700,
+              '#3BB3C3',
+              1400,
+              '#669EC4',
+              2100,
+              '#8B88B6',
+              2800,
+              '#A2719B',
+              3500,
+              '#AA5E79'
+            ],
+            'circle-opacity': 0.8
+          },
+          'filter': ['all', filterYear]
+        });
+
+        // update year filter when the slider is dragged
+        document.getElementById('slider').addEventListener('input', (event) => {
+          const year = parseInt(event.target.value);
+          // update the map
+          filterYear = ['==', ['number', ['get', 'Year']], year];
+          map.setFilter('collisions', ['all', filterYear]);
+          document.getElementById('active-year').innerText = year;
+        });
+      });
+	  
+      mapboxgl.accessToken = 'pk.eyJ1IjoibWlzaGVsOTIiLCJhIjoiY2xoYXJseGNxMGs5YzNmdGRzeHNxbWM0OCJ9._vlW0uget0Cr6QigOoKUjg';
+      const map2 = new mapboxgl.Map({
+        container: 'map2',
+        style: 'mapbox://styles/mapbox/light-v11',
+        center: [-123.17, 50.55],
+        zoom: 11
+      });
+	  map2.rotateTo(20.0)
+	  map2.addControl(new mapboxgl.NavigationControl());
+      map2.on('load', () => {
+        let filterYear = ['==', ['number', ['get', 'Year']], 2009];
+
+        map2.addLayer({
+          id: 'collisions',
+          type: 'circle',
+          source: {
+            type: 'geojson',
+            data: 'https://raw.githubusercontent.com/mmelendezb/mmelendezb.github.io/main/data/active_channel.geojson' // replace this with the url of your own geojson
+          },
+          paint: {
+            'circle-radius': [
+              'interpolate',
+              ['linear'],
+              ['number', ['get', 'AC']],
+              40300,
+              4,
+              282900,
+              24
+            ],
+            'circle-color': [
+              'interpolate',
+              ['linear'],
+              ['number', ['get', 'AC']],
+              40300,
+              '#2DC4B2',
+              88820,
+              '#3BB3C3',
+              137340,
+              '#669EC4',
+              185860,
+              '#8B88B6',
+              234380,
+              '#A2719B',
+              282900,
+              '#AA5E79'
+            ],
+            'circle-opacity': 0.8
+          },
+          'filter': ['all', filterYear]
+        });
+
+        // update year filter when the slider is dragged
+        document.getElementById('slider').addEventListener('input', (event) => {
+          const year = parseInt(event.target.value);
+          // update the map
+          filterYear = ['==', ['number', ['get', 'Year']], year];
+          map2.setFilter('collisions', ['all', filterYear]);
+          document.getElementById('active-year').innerText = year;
+        });
+      });
+	  
+      const map3 = new mapboxgl.Map({
+        container: 'map3',
+        style: 'mapbox://styles/mapbox/light-v11',
+        center: [-123.17, 50.55],
+        zoom: 11
+      });
+	  map3.rotateTo(20.0)
+	  map3.addControl(new mapboxgl.NavigationControl());
+      map3.on('load', () => {
+        let filterYear = ['==', ['number', ['get', 'Year']], 2009];
+
+        map3.addLayer({
+          id: 'collisions',
+          type: 'circle',
+          source: {
+            type: 'geojson',
+            data: 'https://raw.githubusercontent.com/mmelendezb/mmelendezb.github.io/main/data/number_of_bars.geojson' // replace this with the url of your own geojson
+          },
+          paint: {
+            'circle-radius': [
+              'interpolate',
+              ['linear'],
+              ['number', ['get', 'NB']],
+              0,
+              4,
+              15,
+              24
+            ],
+            'circle-color': [
+              'interpolate',
+              ['linear'],
+              ['number', ['get', 'NB']],
+              0,
+              '#2DC4B2',
+              3,
+              '#3BB3C3',
+              6,
+              '#669EC4',
+              9,
+              '#8B88B6',
+              12,
+              '#A2719B',
+              15,
+              '#AA5E79'
+            ],
+            'circle-opacity': 0.8
+          },
+          'filter': ['all', filterYear]
+        });
+
+        // update year filter when the slider is dragged
+        document.getElementById('slider').addEventListener('input', (event) => {
+          const year = parseInt(event.target.value);
+          // update the map
+          filterYear = ['==', ['number', ['get', 'Year']], year];
+          map3.setFilter('collisions', ['all', filterYear]);
+          document.getElementById('active-year').innerText = year;
+        });
+      });
+	  
+    </script>
+  </body>
+</html>
